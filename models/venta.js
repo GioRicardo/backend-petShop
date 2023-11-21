@@ -15,16 +15,12 @@ const VentaSchema = Schema({
         type: Number,
         required: [true, 'Cantidad requerida'],
     },
-    fecha:{
-        type: Date,
-        default: new Date()
-    },
     precioTotal:{
         type: Number,
         required: [true, 'Precio total requerido'],
     },
     
-})
+}, { timestamps: true })
 
 module.exports = model('venta', VentaSchema)
 

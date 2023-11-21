@@ -15,7 +15,7 @@ const UsuarioSchema = Schema({
     },
     contrasena: {
         type: String,
-        default: true,
+        required: [true, 'contrasena requerido'],
         validate: {
             validator: function(v) {
               return /[a-zA-Z]/.test(v) && /[0-9]/.test(v);},message: 'La contraseña debe contener al menos una letra y un número.'}  
@@ -27,19 +27,10 @@ const UsuarioSchema = Schema({
             validator: function(v) {
               return v.length >= 6;},message: 'La dirección debe tener al menos 6 caracteres.'}
     },
-    tipoUsuario:{
-        type: Schema.Types.ObjectId,
-        ref: 'TipoUsuario',
-        required: true
-    },
-    fechaCreacion:{
-        type: Date,
-        default: new Date()
-    },
-    fechaActualizacion:{
-        type: Date,
-        default: new Date()
-    },
-})
+    esVendedor: {
+        type: Boolean,
+        default: false
+    }
+}, { timestamps: true })
 module.exports = model('Usuario', UsuarioSchema)
 

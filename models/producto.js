@@ -4,7 +4,7 @@ const { Schema, model } = require('mongoose')
 const ProductoSchema = Schema({
     vendedor:{
         type: Schema.Types.ObjectId,
-        ref: 'Vendedor',
+        ref: 'Usuario',
         required: true
     },
     nombre: {
@@ -29,6 +29,10 @@ const ProductoSchema = Schema({
         type: Number,
         required: [true, 'Stock requerido'],
     },
+    img: {
+        type: String,
+        default: "https://cdn-icons-png.flaticon.com/512/3342/3342177.png"
+    }
 
 })
 
