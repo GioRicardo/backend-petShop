@@ -2,9 +2,14 @@ const { Schema, model } = require('mongoose')
 
 
 const ProductoSchema = Schema({
-    vendedor:{
+    usuario:{
         type: Schema.Types.ObjectId,
         ref: 'Vendedor',
+        required: true
+    },
+    categoria:{
+        type: Schema.Types.ObjectId,
+        ref: 'Categoria',
         required: true
     },
     nombre: {
