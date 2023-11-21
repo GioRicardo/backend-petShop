@@ -15,5 +15,14 @@ app.use('/api/usuarios', usuario);
 app.use('/api/ventas', venta);
 app.use('/api/productos', producto);
 
+const admin = require('./routes/admin')
+const categoria = require('./routes/categoria')
+
+//URI o Endpoint
+app.use('/api/admins', admin)
+app.use('/api/categorias', categoria)
+
+
+
 module.exports = app
 
