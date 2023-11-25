@@ -44,7 +44,7 @@ const createProducto = async (req = request, res = response) => {
 const getProductos = async (req, res = response) => {
     try {
         const productoDB = await Producto.find().populate({
-            path: 'vendedor'
+            path: 'usuario'
         });
         return res.json(productoDB)
     }catch(e) {
