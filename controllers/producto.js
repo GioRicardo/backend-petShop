@@ -7,18 +7,19 @@ const Producto = require("../models/producto");
  */
 const createProducto = async (req = request, res = response) => {
     try {
-        const { vendedor, nombre, descripcion, precio, stock, img } = req.body;
+        const { usuario, categoria, nombre, descripcion, precio, stock, img } = req.body;
 
-        const vendedorBD = await Usuario.findOne({
-            _id: vendedor
+        const usuarioBD = await Usuario.findOne({
+            _id: usuario
         })
-        if(!vendedorBD){
+        if(!usuarioBD){
             return res.status(400).json({
-                msj: 'No existe el vendedor'
+                msj: 'No existe el usuario'
             })
         }
         const datos = {
-            vendedor,
+            usuario,
+            categoria,
             nombre,
             descripcion,
             precio,
@@ -44,7 +45,7 @@ const createProducto = async (req = request, res = response) => {
 const getProductos = async (req, res = response) => {
     try {
         const productoDB = await Producto.find().populate({
-            path: 'vendedor'
+            path: 'usuario'
         });
         return res.json(productoDB)
     }catch(e) {
@@ -60,7 +61,7 @@ const getProductoPorId = async (req = request, res = response) => {
         const { id } = req.params
         const query = {_id: id}
         const productoDB = await Producto.findOne(query).populate({
-            path: 'vendedor'
+            path: 'usuario'
         });
         return res.json(productoDB)
     }catch(e) {
@@ -73,27 +74,15 @@ const getProductoPorId = async (req = request, res = response) => {
  */
 const updateProductoPorId = async (req = request, res = response) => {
     try {
-        const { id } = req.params
-        const { vendedor, nombre, descripcion, precio, stock, img } = req.body
-        const data = {
-            vendedor,
-            nombre,
-            descripcion,
-            precio,
-            stock,
-            img
-        }
-        const vendedorBD = await Usuario.findOne({
-            _id: vendedor
-        })
-        if(!vendedorBD){
-            return res.status(400).json({
-                msj: 'No existe el vendedor'
-            })
-        }
-        const producto = 
-            await Producto.findByIdAndUpdate(id, data, {new : true});
-        res.status(201).json(producto)
+        const { id } = req.query
+        const data = req.body
+
+        const productoDB = await Producto.findByIdAndUpdate(id,data, {new: true})
+
+        if(!productoDB) return res.json({msg: 'No hay datos'})
+        
+        return res.json({productoDB})
+
     }catch(e) {
         return res.status(500).json({msj: e})
     }
@@ -104,10 +93,19 @@ const updateProductoPorId = async (req = request, res = response) => {
  */
 const deleteProductoByID = async (req = request, res = response) => {
     try{
-        const id = req.params.id;
-        const producto = await Producto.findByIdAndDelete(id);
-        res.status(204).json(producto);
-         }catch(e) {
+        const { id } = req.query
+
+        const productoDB = await Producto.findById(id)
+
+        if(productoDB){
+            const productoDBfound = await Producto.findByIdAndDelete(id)
+            return res.json({msg: 'El producto fue eliminado con exito'})
+        }
+        if(!productoDB){
+            return res.json({msg: 'No existe ese id'})
+        } 
+    
+    }catch(e) {
             return res.status(500).json({msj: e})
         }
 }

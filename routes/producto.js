@@ -28,9 +28,9 @@ router.post('/', createProducto);
 /**
  * Actualiza por id
  */
-router.put('/:id', updateProductoPorId);
+router.put('/', updateProductoPorId);
 
-router.delete('/:id', deleteProductoByID);
+router.delete('/', deleteProductoByID);
 
 /**
  * Actualiza una parte del tipos de equipos
