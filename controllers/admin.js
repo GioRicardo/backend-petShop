@@ -78,7 +78,7 @@ const getAdmins = async (req = request,
 
 }
 
-
+// Eliminar usuario administrador
 const deleteAdmin = async ( req = request, res = response) => {
     try{
         const { id } = req.query
@@ -87,7 +87,7 @@ const deleteAdmin = async ( req = request, res = response) => {
 
         if(adminsDB){
             const adminsDBfound = await Admin.findByIdAndDelete(id)
-            return res.json({msg: 'El tipo de equipo fue eliminado con exito'})
+            return res.json({msg: 'El admin fue eliminado con exito'})
         }
         if(!adminsDB){
             return res.json({msg: 'No existe ese id'})
