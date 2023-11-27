@@ -62,7 +62,7 @@ const getCategorias = async (req = request,
         const categoriasDB = await Categoria.find({})
         if(categoriasDB.length == 0 )
         return res.json({msg: 'No hay datos'})
-        return res.json({categoriasDB})
+        return res.json(categoriasDB)
     }catch(e){
         return res.status(500).json({
             msg: e

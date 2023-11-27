@@ -5,7 +5,8 @@ const  {
     getProductos,
     getProductoPorId,
     updateProductoPorId,
-    deleteProductoByID
+    deleteProductoByID,
+    getProductosPorUsuario
 } = require('../controllers/producto');
 
 const router = Router();
@@ -13,6 +14,8 @@ const router = Router();
 /**
  * Obtiene todos
  */
+
+router.get('/productos_por_usuario/:id', getProductosPorUsuario);
 router.get('/', getProductos);
 
 /**

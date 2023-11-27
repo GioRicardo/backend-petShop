@@ -2,23 +2,33 @@
 const { request, response } = require('express');
 const Usuario = require('../models/usuario');
 const Producto = require("../models/producto");
+const Categoria = require("../models/categoria");
 /**
  * crear
  */
 const createProducto = async (req = request, res = response) => {
     try {
-        const { vendedor, nombre, descripcion, precio, stock, img } = req.body;
+        const { usuario, categoria, nombre, descripcion, precio, stock, img } = req.body;
 
-        const vendedorBD = await Usuario.findOne({
-            _id: vendedor
+        const usuarioBD = await Usuario.findOne({
+            _id: usuario
         })
-        if(!vendedorBD){
+        if(!usuarioBD){
             return res.status(400).json({
-                msj: 'No existe el vendedor'
+                msj: 'No existe el usuario'
+            })
+        }
+        const categoriaBD = await Categoria.findOne({
+            _id: categoria
+        })
+        if(!categoriaBD){
+            return res.status(400).json({
+                msj: 'No existe la categoria'
             })
         }
         const datos = {
-            vendedor,
+            usuario,
+            categoria,
             nombre,
             descripcion,
             precio,
@@ -60,9 +70,24 @@ const getProductoPorId = async (req = request, res = response) => {
         const { id } = req.params
         const query = {_id: id}
         const productoDB = await Producto.findOne(query).populate({
-            path: 'vendedor'
+            path: 'usuario'
         });
         return res.json(productoDB)
+    }catch(e) {
+        return res.status(500).json({msj: e})
+    }
+}
+
+const getProductosPorUsuario = async (req = request, res = response) => {
+    try {
+        const { id } = req.params
+        const query = {"usuario": id}
+        const productosDB = await Producto.find(query).populate({
+            path: 'usuario'
+        }).populate({
+            path: 'categoria'
+        });
+        return res.json(productosDB)
     }catch(e) {
         return res.status(500).json({msj: e})
     }
@@ -74,26 +99,36 @@ const getProductoPorId = async (req = request, res = response) => {
 const updateProductoPorId = async (req = request, res = response) => {
     try {
         const { id } = req.params
-        const { vendedor, nombre, descripcion, precio, stock, img } = req.body
+        const { usuario, categoria, nombre, descripcion, precio, stock, img } = req.body
         const data = {
-            vendedor,
+            usuario,
+            categoria,
             nombre,
             descripcion,
             precio,
             stock,
             img
         }
-        const vendedorBD = await Usuario.findOne({
-            _id: vendedor
+        const usuarioBD = await Usuario.findOne({
+            _id: usuario
         })
-        if(!vendedorBD){
+        if(!usuarioBD){
             return res.status(400).json({
-                msj: 'No existe el vendedor'
+                msj: 'No existe el usuario'
+            })
+        }
+        const categoriaBD = await Categoria.findOne({
+            _id: categoria
+        })
+        if(!categoriaBD){
+            return res.status(400).json({
+                msj: 'No existe la categoria'
             })
         }
         const producto = 
             await Producto.findByIdAndUpdate(id, data, {new : true});
-        res.status(201).json(producto)
+
+       return res.status(201).json(producto)
     }catch(e) {
         return res.status(500).json({msj: e})
     }
@@ -106,8 +141,17 @@ const deleteProductoByID = async (req = request, res = response) => {
     try{
         const id = req.params.id;
         const producto = await Producto.findByIdAndDelete(id);
-        res.status(204).json(producto);
+
+        if (!producto) {
+            // Si el producto no se encontró
+            return res.status(404).json({ msj: "Producto no encontrado" });
+        }
+
+        // Si el producto se eliminó correctamente
+        return res.status(200).json({ msj: "Producto eliminado con éxito", producto });
+
          }catch(e) {
+            console.log(e);
             return res.status(500).json({msj: e})
         }
 }
@@ -118,5 +162,6 @@ module.exports = {
     getProductos,
     getProductoPorId,
     updateProductoPorId,
-    deleteProductoByID
+    deleteProductoByID,
+    getProductosPorUsuario
 }
