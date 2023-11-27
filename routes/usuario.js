@@ -5,14 +5,17 @@ const  {
     getUsuarios,
     getUsuarioPorId,
     updateUsuarioPorId,
-    deleteUsuarioByID
+    deleteUsuarioByID,
+    login
 } = require('../controllers/usuario');
 
 const router = Router();
 
 /**
  * Obtiene todos
+ * 
  */
+router.post('/login', login);
 router.get('/', getUsuarios);
 
 /**
@@ -31,6 +34,9 @@ router.post('/', createUsuario);
 router.put('/', updateUsuarioPorId);
 
 router.delete('/', deleteUsuarioByID);
+
+
+
 
 /**
  * Actualiza una parte del tipos de equipos

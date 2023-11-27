@@ -103,10 +103,49 @@ const deleteUsuarioByID = async (req = request, res = response) => {
 }
 
 
+const login = async (req, res) => {
+    const { email, contrasena } = req.body;
+  
+    try {
+      const usuarioEmail = await Usuario.findOne({ email });
+        
+      console.log('recibiendo.... '+email+ ' Contraseña: '+contrasena)
+
+
+      if (!usuarioEmail) {
+        return res.status(404).send({
+          msg: "Usuario - No existe",
+        });
+      }
+  
+      if (usuarioEmail.contrasena === contrasena) {
+        return res.status(200).send({
+            data: usuarioEmail,
+            success: true
+        });
+      }else{
+        return res.status(404).send({
+            msg: "Email o Contraseña incorrecta",
+            success: false
+          });
+      }
+
+    } catch (error) {
+      console.log(error);
+      return res.status(404).send({
+        msg: "Error de servidor",
+        success: false
+      });
+    }
+  };
+  
+
+
 module.exports = { 
     createUsuario,
     getUsuarios,
     getUsuarioPorId,
     updateUsuarioPorId,
-    deleteUsuarioByID
+    deleteUsuarioByID,
+    login
 }

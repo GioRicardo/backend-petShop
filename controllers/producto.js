@@ -105,6 +105,8 @@ const deleteProductoByID = async (req = request, res = response) => {
             return res.json({msg: 'No existe ese id'})
         } 
     
+        res.status(200).send('OK');
+
     }catch(e) {
             return res.status(500).json({msj: e})
         }
