@@ -142,7 +142,7 @@ const updateProductoPorId = async (req = request, res = response) => {
 
             if(!productoDB) return res.json({msg: 'No hay datos con ese ID de producto'})
         
-            return res.json({productoDB})
+            return res.json(productoDB)
         }
         
     }catch(e) {
