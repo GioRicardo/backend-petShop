@@ -98,37 +98,53 @@ const getProductosPorUsuario = async (req = request, res = response) => {
  */
 const updateProductoPorId = async (req = request, res = response) => {
     try {
+                      
         const { id } = req.params
-        const { usuario, categoria, nombre, descripcion, precio, stock, img } = req.body
-        const data = {
-            usuario,
-            categoria,
-            nombre,
-            descripcion,
-            precio,
-            stock,
-            img
-        }
-        const usuarioBD = await Usuario.findOne({
-            _id: usuario
-        })
-        if(!usuarioBD){
-            return res.status(400).json({
-                msj: 'No existe el usuario'
+               
+        if(req.body.usuario && req.body.categoria){
+            const { usuario, categoria, nombre, descripcion, precio, stock, img } = req.body
+            
+            const data = {
+                usuario,
+                categoria,
+                nombre,
+                descripcion,
+                precio,
+                stock,
+                img
+            }
+            const usuarioBD = await Usuario.findOne({
+                _id: usuario
             })
-        }
-        const categoriaBD = await Categoria.findOne({
-            _id: categoria
-        })
-        if(!categoriaBD){
-            return res.status(400).json({
-                msj: 'No existe la categoria'
+            if(!usuarioBD){
+                return res.status(400).json({
+                    msj: 'No existe el usuario'
+                })
+            }
+            const categoriaBD = await Categoria.findOne({
+                _id: categoria
             })
-        }
-        const producto = 
-            await Producto.findByIdAndUpdate(id, data, {new : true});
+            if(!categoriaBD){
+                return res.status(400).json({
+                    msj: 'No existe la categoria'
+                })
+            }
+            const producto = 
+                await Producto.findByIdAndUpdate(id, data, {new : true});
 
-       return res.status(201).json(producto)
+        return res.status(201).json(producto)  
+        } else {
+
+            const { id } = req.params
+            const data = req.body
+
+            const productoDB = await Producto.findByIdAndUpdate(id, data, {new : true});
+
+            if(!productoDB) return res.json({msg: 'No hay datos con ese ID de producto'})
+        
+            return res.json({productoDB})
+        }
+        
     }catch(e) {
         return res.status(500).json({msj: e})
     }
